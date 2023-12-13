@@ -13,7 +13,7 @@ authRouter.post("/signin", isEmptyBody, validateBody(userSigninSchema), authCont
 
 authRouter.get("/current", authenticate, authController.getCurrent);
 
-authRouter.patch("/avatars", upload.single("avatarURL"), authenticate, authController.avatars);
+authRouter.patch("/avatars", upload.single("avatarURL"), /*isEmptyBody*/ authenticate,  authController.avatars);
 
 //logout
 authRouter.post("/signout", authenticate, authController.signout);
