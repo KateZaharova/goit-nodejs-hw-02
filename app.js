@@ -76,6 +76,19 @@ const nodemailerConfig = {
     user: UKR_NET_EMAIL,
     pass: UKR_NET_PASSWORD,
   }
-}
+};
+
+const transport = nodemailer.createTransport(nodemailerConfig);
+
+const email = {
+  from: UKR_NET_EMAIL,
+  to: "lodet95565@getmola.com",
+  subject: "Test email",
+  html: "<strong>Test email</strong>"
+};
+
+transport.sendMail(email)
+  .then(() => console.log("Email send success"))
+  .catch(error => console.log(error.message));
 
 export default app;
