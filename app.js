@@ -5,6 +5,9 @@ import contactsRouter from "./routes/api/contacts-router.js";
 import authRouter from "./routes/api/auth-router.js";
 import dotenv from "dotenv";
 //import ElasticEmail from "@elasticemail/elasticemail-client";
+//ELASTICEMAIL_API_KEY=0B8D3B4FC20A9858ABFB20762A7D9C000CE75EFA08899E92D79D1D8C8253F924A02EFC7E335CB3DF03A078D976DD5B3A
+//ELASTICEMAIL_EMAIL_FROM=15071981@gmail.com
+
 import nodemailer from "nodemailer";
 
 dotenv.config();
@@ -64,31 +67,31 @@ const callback = function(error, data, response) {
     console.log('API called successfully.');
   }
 };
-api.emailsPost(email, callback);*/
+api.emailsPost(email, callback);
 
-const { UKR_NET_PASSWORD, UKR_NET_EMAIL } = process.env;
+const { GMAIL_PASSWORD, GMAIL_EMAIL } = process.env;
 
 const nodemailerConfig = {
-  host: "smtp.ukr.net",
-  port: 465,
+  host: "smtp.gmail.com",
+  port: 587,
   secure: true,
   auth: {
-    user: UKR_NET_EMAIL,
-    pass: UKR_NET_PASSWORD,
+    user: GMAIL_EMAIL,
+    pass: GMAIL_PASSWORD,
   }
 };
 
 const transport = nodemailer.createTransport(nodemailerConfig);
 
 const email = {
-  from: UKR_NET_EMAIL,
-  to: "lodet95565@getmola.com",
+  from: GMAIL_EMAIL,
+  to: "saperi7820@anawalls.com",
   subject: "Test email",
   html: "<strong>Test email</strong>"
 };
 
 transport.sendMail(email)
   .then(() => console.log("Email send success"))
-  .catch(error => console.log(error.message));
+  .catch(error => console.log(error.message));*/
 
 export default app;
