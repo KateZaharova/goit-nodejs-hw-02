@@ -28,9 +28,9 @@ const signup = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10);
 
     const verificationToken = nanoid();  
-    console.log(verificationToken);
 
-    const newUser = await User.create({ ...req.body, password: hashPassword, avatarURL: url, verificationToken });   
+    const newUser = await User.create({ ...req.body, password: hashPassword, avatarURL: url, verificationToken });  
+    
     const verifyEmail = {
         to: email,
         subject: "Verify email",
@@ -43,6 +43,7 @@ const signup = async (req, res) => {
             email: newUser.email,
             subscription: newUser.subscription,
             avatarURL: url, 
+            verificationToken: newUser.verificationToken,
         }
     })
 };
@@ -51,12 +52,12 @@ const verify = async (req, res) => {
     const { verificationToken } = req.params;
     const user = await User.findOne({ verificationToken });
     if (!user) {
-        throw HttpError(401, "Email not found");
+        throw HttpError(404, "User not found");
     }
     await User.findByIdAndUpdate(user._id, { verify: true, verificationToken: "" });
 
     res.json({
-        message: "Email verified successfully"
+        message: "Verification successful"
     })
 };
 
@@ -64,10 +65,10 @@ const resendVerify = async (req, res) => {
     const { email } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-        throw HttpError(401, "Email was not found");
+        throw HttpError(400, "Missing required field email");
     }
     if (user.verify) {
-        throw HttpError(400, "Email is already verified")
+        throw HttpError(400, "Verification has already been passed")
     }
     const verifyEmail = {
         to: email,
@@ -76,15 +77,16 @@ const resendVerify = async (req, res) => {
     }
     await sendEmail(verifyEmail);
 
-    res.json({
-        message: "Email was sent successfully"
+    res.status(200).json({
+        message: "Verification email sent"
     })
 };
 
 
 const signin = async (req, res) => {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const { email, password} = req.body;
+    
+    const user = await User.findOne({ email}); 
     if (!user) {
         throw HttpError(401, "Email or password is wrong");
     }
