@@ -120,7 +120,6 @@ const signin = async (req, res) => {
 const avatars = async (req, res) => {
     const { _id, avatarURL } = req.user;
     const { path: oldPath, filename } = req.file;
-    //console.log(req.file);
     const newPath = path.join(avatarsPath, filename);
     await fs.rename(oldPath, newPath);
     const avatar = path.join("avatars", filename);
@@ -139,9 +138,7 @@ const avatars = async (req, res) => {
     const result = await User.findByIdAndUpdate(_id, {avatarURL: avatar })
      if (!result) {
             throw HttpError(401, `Not authorized`);
-     } /*else if (originalname === "") {
-         throw HttpError(401, `No file attached`);
-    }*/
+     } 
         res.status(200).json({
             avatarURL: avatar,
     })
